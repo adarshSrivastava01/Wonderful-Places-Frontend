@@ -1,19 +1,19 @@
-import React, { useContext } from "react";
+import React, { useContext } from 'react';
+import { useHistory } from 'react-router-dom';
 
-import "./PlaceForm.css";
-import Input from "../../shared/components/FormElements/Input";
-import { useHistory } from "react-router-dom";
+import Input from '../../shared/components/FormElements/Input';
+import Button from '../../shared/components/FormElements/Button';
+import ErrorModal from '../../shared/components/UIElements/ErrorModal';
+import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
+import ImageUpload from '../../shared/components/FormElements/ImageUpload';
 import {
   VALIDATOR_REQUIRE,
-  VALIDATOR_MINLENGTH,
-} from "../../shared/util/validators";
-import Button from "../../shared/components/FormElements/Button";
-import ErrorModal from "../../shared/components/UIElements/ErrorModal";
-import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
-import { useHttpClient } from "../../shared/hooks/http-hook";
-import { AuthContext } from "../../shared/context/auth-context";
-import { useForm } from "../../shared/hooks/from-hook";
-import ImageUpload from "../../shared/components/FormElements/ImageUpload";
+  VALIDATOR_MINLENGTH
+} from '../../shared/util/validators';
+import { useForm } from '../../shared/hooks/form-hook';
+import { useHttpClient } from '../../shared/hooks/http-hook';
+import { AuthContext } from '../../shared/context/auth-context';
+import './PlaceForm.css';
 
 const NewPlace = () => {
   const auth = useContext(AuthContext);
@@ -21,41 +21,42 @@ const NewPlace = () => {
   const [formState, inputHandler] = useForm(
     {
       title: {
-        value: "",
-        isValid: false,
+        value: '',
+        isValid: false
       },
       description: {
-        value: "",
-        isValid: false,
+        value: '',
+        isValid: false
       },
       address: {
-        value: "",
-        isValid: false,
+        value: '',
+        isValid: false
       },
       image: {
         value: null,
-        isValid: false,
-      },
+        isValid: false
+      }
     },
     false
   );
 
   const history = useHistory();
 
-  const placeSubmitHandler = async (event) => {
+  const placeSubmitHandler = async event => {
     event.preventDefault();
     try {
       const formData = new FormData();
-      formData.append("title", formState.inputs.title.value);
-      formData.append("description", formState.inputs.description.value);
-      formData.append("address", formState.inputs.address.value);
-      formData.append("image", formState.inputs.image.value);
-      await sendRequest("http://localhost:5000/api/places/", "POST", formData, {
-        Authorization: "Bearer " + auth.token,
+      formData.append('title', formState.inputs.title.value);
+      formData.append('description', formState.inputs.description.value);
+      formData.append('address', formState.inputs.address.value);
+      formData.append('image', formState.inputs.image.value);
+      await sendRequest('http://localhost:5000/api/places', 'POST', formData, {
+        Authorization: 'Bearer ' + auth.token
       });
-      history.push("/");
+      history.push('/');
     } catch (err) {}
   };
+
   return (
     <React.Fragment>
       <ErrorModal error={error} onClear={clearError} />
@@ -75,7 +76,7 @@ const NewPlace = () => {
           element="textarea"
           label="Description"
           validators={[VALIDATOR_MINLENGTH(5)]}
-          errorText="Please enter a valid description(at least 5 characters)."
+          errorText="Please enter a valid description (at least 5 characters)."
           onInput={inputHandler}
         />
         <Input
@@ -92,7 +93,7 @@ const NewPlace = () => {
           errorText="Please provide an image."
         />
         <Button type="submit" disabled={!formState.isValid}>
-          Add place
+          ADD PLACE
         </Button>
       </form>
     </React.Fragment>

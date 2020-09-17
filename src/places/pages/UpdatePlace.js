@@ -1,18 +1,19 @@
-import React, { useEffect, useState, useContext } from "react";
-import { useParams, useHistory } from "react-router-dom";
-import Input from "../../shared/components/FormElements/Input";
-import Button from "../../shared/components/FormElements/Button";
-import "./PlaceForm.css";
+import React, { useEffect, useState, useContext } from 'react';
+import { useParams, useHistory } from 'react-router-dom';
+
+import Input from '../../shared/components/FormElements/Input';
+import Button from '../../shared/components/FormElements/Button';
+import Card from '../../shared/components/UIElements/Card';
+import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
+import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import {
   VALIDATOR_REQUIRE,
-  VALIDATOR_MINLENGTH,
-} from "../../shared/util/validators";
-import Card from "../../shared/components/UIElements/Card";
-import { useForm } from "../../shared/hooks/from-hook";
-import { useHttpClient } from "../../shared/hooks/http-hook";
-import { AuthContext } from "../../shared/context/auth-context";
-import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
-import ErrorModal from "../../shared/components/UIElements/ErrorModal";
+  VALIDATOR_MINLENGTH
+} from '../../shared/util/validators';
+import { useForm } from '../../shared/hooks/form-hook';
+import { useHttpClient } from '../../shared/hooks/http-hook';
+import { AuthContext } from '../../shared/context/auth-context';
+import './PlaceForm.css';
 
 const UpdatePlace = () => {
   const auth = useContext(AuthContext);
@@ -24,13 +25,13 @@ const UpdatePlace = () => {
   const [formState, inputHandler, setFormData] = useForm(
     {
       title: {
-        value: "",
-        isValid: false,
+        value: '',
+        isValid: false
       },
       description: {
-        value: "",
-        isValid: false,
-      },
+        value: '',
+        isValid: false
+      }
     },
     false
   );
@@ -46,12 +47,12 @@ const UpdatePlace = () => {
           {
             title: {
               value: responseData.place.title,
-              isValid: true,
+              isValid: true
             },
             description: {
               value: responseData.place.description,
-              isValid: true,
-            },
+              isValid: true
+            }
           },
           true
         );
@@ -60,18 +61,19 @@ const UpdatePlace = () => {
     fetchPlace();
   }, [sendRequest, placeId, setFormData]);
 
-  const placeUpdateSubmitHandler = async (event) => {
+  const placeUpdateSubmitHandler = async event => {
     event.preventDefault();
     try {
       await sendRequest(
         `http://localhost:5000/api/places/${placeId}`,
-        "PATCH",
+        'PATCH',
         JSON.stringify({
           title: formState.inputs.title.value,
-          description: formState.inputs.description.value,
+          description: formState.inputs.description.value
         }),
-        { "Content-Type": "application/json",
-          Authorization: 'Bearer ' + auth.token,  
+        {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + auth.token
         }
       );
       history.push('/' + auth.userId + '/places');
@@ -81,9 +83,7 @@ const UpdatePlace = () => {
   if (isLoading) {
     return (
       <div className="center">
-        <Card>
-          <LoadingSpinner />
-        </Card>
+        <LoadingSpinner />
       </div>
     );
   }
@@ -91,7 +91,9 @@ const UpdatePlace = () => {
   if (!loadedPlace && !error) {
     return (
       <div className="center">
-        <h2>Could not find place!</h2>
+        <Card>
+          <h2>Could not find place!</h2>
+        </Card>
       </div>
     );
   }
@@ -103,8 +105,8 @@ const UpdatePlace = () => {
         <form className="place-form" onSubmit={placeUpdateSubmitHandler}>
           <Input
             id="title"
-            type="text"
             element="input"
+            type="text"
             label="Title"
             validators={[VALIDATOR_REQUIRE()]}
             errorText="Please enter a valid title."
