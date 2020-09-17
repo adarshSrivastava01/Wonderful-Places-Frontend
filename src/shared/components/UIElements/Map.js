@@ -16,9 +16,7 @@ const Map = (props) => {
     <div className={`map ${props.className}`} style={props.style}>
       <ReactMapGL
         {...viewport}
-        mapboxApiAccessToken={
-          "pk.eyJ1IjoiYWRhcnNoc3JpdmFzdGF2YTAxIiwiYSI6ImNrZWR4YmhjcDB3ZWQydW10bWoxZ3N6ODYifQ.N-zZdv7VardT1U4bknwLag"
-        }
+        mapboxApiAccessToken={"%REACT_APP_MAPBOX_API_KEY%"}
         onViewportChange={(viewport) => {
           setViewport(viewport);
         }}
